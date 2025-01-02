@@ -1,4 +1,4 @@
-import Broad from './pages/Boards/_id'
+import Broad from '~/pages/Boards/_id'
 
 
 function App() {
