@@ -53,7 +53,7 @@ const theme = extendTheme({
     MuiInputLabel: {
       styleOverrides: {
         // Name of the slot
-        root: ({theme}) => ({
+        root: ({ theme }) => ({
           color: theme.palette.primary.main,
           fontSize: '0.875rem'
         })
@@ -73,7 +73,7 @@ const theme = extendTheme({
               borderColor: theme.palette.primary.light
             }
           },
-          '& fieldset':{
+          '& fieldset': {
             borderWidth: '1px !important' // fieldset - borderWidth: 2px => bold border 
           }
         })
