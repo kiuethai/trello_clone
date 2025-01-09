@@ -1,9 +1,9 @@
 
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-
-function BroadContent() {
-
+import { mapOrder } from '~/utils/sorts'
+function BroadContent({ board }) {
+  const orderedColumns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
   return (
     <Box
       sx={{
@@ -13,7 +13,7 @@ function BroadContent() {
         p: '10px 0'
       }}
     >
-      <ListColumns />
+      <ListColumns columns={orderedColumns} />
     </Box>
   )
 }
