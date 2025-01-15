@@ -25,7 +25,7 @@ function ListCard({ cards }) {
       }
     }}>
       {cards?.map(card => <Card key={card._id} card={card} />)}
-      <Card />
+   
     </Box >
   )
 }
