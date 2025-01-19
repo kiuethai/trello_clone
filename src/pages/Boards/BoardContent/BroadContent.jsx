@@ -9,7 +9,8 @@ import {
   useSensors,
   MouseSensor,
   TouchSensor,
-  DragOverlay
+  DragOverlay,
+  defaultDropAnimationSideEffects
 } from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
@@ -86,6 +87,10 @@ function BroadContent({ board }) {
   // console.log('activeDragItemType ', activeDragItemType)
   // console.log('activeDragItemData ', activeDragItemData)
 
+  const customDropAnimation = { 
+    sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.5' } } })
+  }
+
   return (
     <DndContext
       sensors={sensor}
@@ -101,9 +106,11 @@ function BroadContent({ board }) {
         }}
       >
         <ListColumns columns={orderedColumns} />
-        <DragOverlay>
+        <DragOverlay dropAnimation={customDropAnimation}>
           {(!activeDragItemType) && null}
           {(activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
+          {(activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Card card={activeDragItemData} />}
+
         </DragOverlay>
       </Box>
     </DndContext>
