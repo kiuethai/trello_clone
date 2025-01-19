@@ -2,9 +2,21 @@
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOrder } from '~/utils/sorts'
-import { DndContext, PointerSensor, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core'
+import {
+  DndContext,
+  //PointerSensor,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+  DragOverlay
+} from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
+
+import Column from './ListColumns/Column/Column'
+import Card from './ListColumns/Column/ListCards/Card/Card'
+
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -16,9 +28,9 @@ function BroadContent({ board }) {
   // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug 
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   // Yêu cầu chuột di chuyển 10px thì mới kích hoạt event, fix trường hợp click bị gọi event 
-  const mouseSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
   // Nhân giữ 250ms và dung sai của cảm ứng  500px thì mới kích hoạt event 
-  const touchSensor = useSensor(PointerSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
   // const sensor = useSensors(pointerSensor)
   // Ưu tiên sử dụng kết hợp 2 loại sensors là mouse và touch
   const sensor = useSensors(mouseSensor, touchSensor)
@@ -26,20 +38,23 @@ function BroadContent({ board }) {
   const [orderedColumns, setOrderedColumns] = useState([])
 
   // cùng một thời điểm chỉ có một phần tiwr đang được kéo (column hoăc card)
-  const [ativeDragItemId, setAtiveDragItemId] = useState(null)
-  const [ativeDragItemType, setAtiveDragItemType] = useState(null)
-  const [ativeDragItemData, setAtiveDragItemData] = useState(null)
+  const [activeDragItemId, setActiveDragItemId] = useState(null)
+  const [activeDragItemType, setActiveDragItemType] = useState(null)
+  const [activeDragItemData, setActiveDragItemData] = useState(null)
 
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
   }, [board])
 
+  // Trigger khi bắt đầi kéo một phần tử
   const handleDragStart = (event) => {
-    console.log('handleDragStart', event)
-    setAtiveDragItemId(event?.active?.id)
-    setAtiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
-    setAtiveDragItemData(event?.active?.data?.current)
+    // console.log('handleDragStart', event)
+    setActiveDragItemId(event?.active?.id)
+    setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
+    setActiveDragItemData(event?.active?.data?.current)
   }
+
+  // Trigger khi kết thúc hành động  kéo (drag) một phần tử =>  hành động thả (drop)
   const handleDragEnd = (event) => {
     console.log('handleDragEnd: ', event)
     const { active, over } = event
@@ -61,7 +76,16 @@ function BroadContent({ board }) {
 
       setOrderedColumns(dndOrderedColumns)
     }
+
+    setActiveDragItemId(null)
+    setActiveDragItemType(null)
+    setActiveDragItemData(null)
   }
+
+  // console.log('activeDragItemId ', activeDragItemId)
+  // console.log('activeDragItemType ', activeDragItemType)
+  // console.log('activeDragItemData ', activeDragItemData)
+
   return (
     <DndContext
       sensors={sensor}
@@ -77,6 +101,10 @@ function BroadContent({ board }) {
         }}
       >
         <ListColumns columns={orderedColumns} />
+        <DragOverlay>
+          {(!activeDragItemType) && null}
+          {(activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
+        </DragOverlay>
       </Box>
     </DndContext>
   )
