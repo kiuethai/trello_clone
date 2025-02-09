@@ -12,9 +12,9 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
-  closestCenter,
+  //closestCenter,
   pointerWithin,
-  rectIntersection,
+  //rectIntersection,
   getFirstCollision
 } from '@dnd-kit/core'
 import { useEffect, useState, useCallback, useRef } from 'react'
@@ -32,11 +32,11 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 function BroadContent({ board }) {
   // fix trường hợp click bị gọi event
-  // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug 
+  // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
-  // Yêu cầu chuột di chuyển 10px thì mới kích hoạt event, fix trường hợp click bị gọi event 
+  // Yêu cầu chuột di chuyển 10px thì mới kích hoạt event, fix trường hợp click bị gọi event
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
-  // Nhân giữ 250ms và dung sai của cảm ứng  500px thì mới kích hoạt event 
+  // Nhân giữ 250ms và dung sai của cảm ứng  500px thì mới kích hoạt event
   const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
   // const sensor = useSensors(pointerSensor)
   // Ưu tiên sử dụng kết hợp 2 loại sensors là mouse và touch
@@ -114,13 +114,11 @@ function BroadContent({ board }) {
 
   // trigger trong quá trình kéo (drag) một phần tử
   const handleDragOver = (event) => {
-    console.log('handleDragOver: ', event)
+    //console.log('handleDragOver: ', event)
     // không làm gì thêm nếu đang kéo Column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
-
     const { active, over } = event
-
-    // Cần đẩm bảo nếu không tồn tại active hoặc over (khi kéo ra khỏi phạm vi container) thì không làm gì 
+    // Cần đẩm bảo nếu không tồn tại active hoặc over (khi kéo ra khỏi phạm vi container) thì không làm gì
     // (tránh crash trang)
     if (!active || !over) return
 
@@ -149,7 +147,7 @@ function BroadContent({ board }) {
     // console.log('handleDragEnd: ', event)
     const { active, over } = event
 
-    // Cần đẩm bảo nếu không tồn tại active hoặc over (khi kéo ra khỏi phạm vi container) thì không làm gì 
+    // Cần đẩm bảo nếu không tồn tại active hoặc over (khi kéo ra khỏi phạm vi container) thì không làm gì
     // (tránh crash trang)
     if (!active || !over) return
 
@@ -235,23 +233,28 @@ function BroadContent({ board }) {
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
       return closestCorners({ ...args })
     }
+    // tìm các điểm giao nhau, va chạm - intersections với con trỏ
     const pointerIntersections = pointerWithin(args)
-    const intersections = !!pointerIntersections?.length
-      ? pointerIntersections
-      : rectIntersection(args)
-    let overId = getFirstCollision(intersections, 'id')
+    // fix bug flickering của thư viện dndkit trường hợp
+    // - kéo một card có image cover lớn và kéo lên phía trên cùng ra khỏi khu vực kéo thả
+    if (!pointerIntersections?.length) return
+    // thuật toán phát hiện va hạm sẽ trả về một mảng các va chạm ở đây (không cần bước này nữa)
+    // const intersections = !!pointerIntersections?.length
+    //   ? pointerIntersections
+    //   : rectIntersection(args)
+    let overId = getFirstCollision(pointerIntersections, 'id')
     if (overId) {
 
       const checkColumn = orderedColumns.find(column => column._id === overId)
       if (checkColumn) {
-        console.log('over before: ', overId)
-        overId = closestCenter({
+        //console.log('over before: ', overId)
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             return (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
           })
         })[0]?.id
-        console.log('over after: ', overId)
+        //console.log('over after: ', overId)
       }
       lastOverId.current = overId
       return [{ id: overId }]
@@ -266,7 +269,7 @@ function BroadContent({ board }) {
       // nó đang bị conflict giữa card và column), chúng ta sẽ dùng clostestCorners thay vì closestCenter
       // Nếu chỉ dùng closestCorners sẽ có bug flixkering + sai lệch dữ liệu
       // collisionDetection={closestCorners}
-      // tự custom nâng cao thuật toán phát hiện va chạm 
+      // tự custom nâng cao thuật toán phát hiện va chạm
       collisionDetection={collisionDetectionStrategy}
 
       onDragStart={handleDragStart}
