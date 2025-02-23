@@ -41,9 +41,7 @@ function BroadContent({ board }) {
   // const sensor = useSensors(pointerSensor)
   // Ưu tiên sử dụng kết hợp 2 loại sensors là mouse và touch
   const sensor = useSensors(mouseSensor, touchSensor)
-
   const [orderedColumns, setOrderedColumns] = useState([])
-
   // cùng một thời điểm chỉ có một phần tiwr đang được kéo (column hoăc card)
   const [activeDragItemId, setActiveDragItemId] = useState(null)
   const [activeDragItemType, setActiveDragItemType] = useState(null)

@@ -1,16 +1,16 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
-const APP_BAR_HEIFGHT = '58px'
-const BOAER_BAR_HEIGHT = '60px'
-const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIFGHT} - ${BOAER_BAR_HEIGHT})`
+const APP_BAR_HEIGHT = '58px'
+const BOARD_BAR_HEIGHT = '60px'
+const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
 
 // Create a theme instance
 const theme = extendTheme({
   trello: {
-    appBarHeight: APP_BAR_HEIFGHT,
-    boardBarHeight: BOAER_BAR_HEIGHT,
+    appBarHeight: APP_BAR_HEIGHT,
+    boardBarHeight: BOARD_BAR_HEIGHT,
     boardContentHeight: BOARD_CONTENT_HEIGHT,
     columnHeaderHeight: COLUMN_HEADER_HEIGHT,
     columnFooterHeight: COLUMN_FOOTER_HEIGHT
@@ -78,9 +78,8 @@ const theme = extendTheme({
       styleOverrides: {
         // Name of the slot
         root: {
-
           fontSize: '0.875rem',
-          '& fieldset': { borderWidth: '0.5px !important' }, // fieldset - borderWidth: 2px => bold border 
+          '& fieldset': { borderWidth: '0.5px !important' }, // fieldset - borderWidth: 2px => bold border
           '&:hover fieldset': { borderWidth: '1px !important' },
           '&.Mui-focused fieldset': { borderWidth: '1px !important' }
         }
