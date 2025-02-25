@@ -23,22 +23,22 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
-import theme from '~/theme'
+import { toast } from 'react-toastify'
 
 function Column({ column }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
-  });
+  })
 
   const dndKitColumnsStyles = {
     // touchAction: 'none', // dành cho sensor default dạng PointerSensor
     transform: CSS.Translate.toString(transform),
     transition,
     height: '100%', // chiều cao phải luôn max 100% vì nếu không sẽ lỗi lúc kéo column ngắn qua một cái column dài thì phải kéo ở khu vực giữa giữa
-    //  Lưu ý lúc này phải kết hợp với {…listeners} nằm ở Box chứ không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh. 
+    //  Lưu ý lúc này phải kết hợp với {…listeners} nằm ở Box chứ không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh.
     opacity: isDragging ? 0.5 : undefined
-  };
+  }
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -51,7 +51,7 @@ function Column({ column }) {
   const [newCardTitle, setNewCardTitle] = useState('')
   const addNewCard = () => {
     if (!newCardTitle) {
-      // console.error('Please enter Card Title!')
+      toast.error('Please enter Card Title!', { position: 'bottom-right' })
       return
     }
     // console.log(newCardTitle)
@@ -62,7 +62,7 @@ function Column({ column }) {
     setNewCardTitle('')
   }
   {/* Box Column test 01 */ }
-  // Phải bọc div ở đây vì vấn đề chiều cao của column khi kéo thả sẽ có bug kiểu flickering 
+  // Phải bọc div ở đây vì vấn đề chiều cao của column khi kéo thả sẽ có bug kiểu flickering
   return (
     <div ref={setNodeRef} style={dndKitColumnsStyles} {...attributes}>
       < Box
@@ -179,14 +179,14 @@ function Column({ column }) {
                   onChange={(e) => setNewCardTitle(e.target.value)}
                   sx={{
                     '& label': { color: 'text.primary' },
-                    '& input': { 
+                    '& input': {
                       color: (theme) => theme.palette.primary.main,
                       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : 'white')
                     },
-                    '& label.Mui-focused': { color: (theme) => theme.palette.primary.main},
+                    '& label.Mui-focused': { color: (theme) => theme.palette.primary.main },
                     '& .MuiOutlinedInput-root': {
                       '& fieldset': { borderColor: (theme) => theme.palette.primary.main },
-                      '& :hover fieldset': { borderColor: (theme) => theme.palette.primary.main},
+                      '& :hover fieldset': { borderColor: (theme) => theme.palette.primary.main },
                       '&.Mui-focused fieldset': { borderColor: (theme) => theme.palette.primary.main }
                     },
                     '& .MuiOutlinedInput-input': {
