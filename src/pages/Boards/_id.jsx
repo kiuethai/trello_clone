@@ -3,7 +3,7 @@ import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BroadContent from './BoardContent/BroadContent'
-// import { mockData } from '~/apis/mock-data'
+import { mockData } from '~/apis/mock-data'
 
 import { fetchBoardDetailsAPI } from '~/apis'
 function Broad() {
@@ -19,8 +19,8 @@ function Broad() {
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
-      <BoardBar board={board} />
-      <BroadContent board={board} />
+      <BoardBar board={mockData.board} />
+      <BroadContent board={mockData.board} />
     </Container>
   )
 }
