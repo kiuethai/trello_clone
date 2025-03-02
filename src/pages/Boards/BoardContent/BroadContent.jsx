@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BroadContent({ board, createNewColumn, createNewCard }) {
+function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
   // fix trường hợp click bị gọi event
   // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -162,6 +162,7 @@ function BroadContent({ board, createNewColumn, createNewCard }) {
     // (tránh crash trang)
     if (!active || !over) return
 
+    // Xử lý kéo thả Cards
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
 
       const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
@@ -205,7 +206,8 @@ function BroadContent({ board, createNewColumn, createNewCard }) {
 
       }
     }
-    // xử lý kéo thả Columns
+
+    // xử lý kéo thả Columns trong một cái boardContent
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
       // Nếu vị trí sau khi kéo thả khác với vị trí ban đầu
       if (active.id !== over.id) {
@@ -215,11 +217,10 @@ function BroadContent({ board, createNewColumn, createNewCard }) {
         // Lấy vị trí mới ( từ thằng over)
         const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        // console.log  dữ liệu này  sau dùng để xử lý gọi API
-        // const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
-        // console.log('dndOrderedColumns: ', dndOrderedColumns)
-        // console.log('dndOrderedColumnsIds: ', dndOrderedColumnsIds)
 
+        moveColumns(dndOrderedColumns)
+
+        // Vẫn gọi update State ở đây để tránh delay hoặc Flickering giao diện lúc kéo thả cần phải chờ gọi API
         setOrderedColumns(dndOrderedColumns)
       }
     }
@@ -230,10 +231,6 @@ function BroadContent({ board, createNewColumn, createNewCard }) {
     setActiveDragItemData(null)
     setOldColumnWhenDraggingCard(null)
   }
-
-  // console.log('activeDragItemId ', activeDragItemId)
-  // console.log('activeDragItemType ', activeDragItemType)
-  // console.log('activeDragItemData ', activeDragItemData)
 
   const customDropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.5' } } })

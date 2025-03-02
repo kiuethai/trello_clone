@@ -15,6 +15,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
+  console.log('columns:', columns)
   const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
@@ -32,7 +33,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
   }
-  {/* Thằng SortableContext yêu cầu items là một mảng dạng ['id-1', 'id-2'] chứ không phải 
+  {/* Thằng SortableContext yêu cầu items là một mảng dạng ['id-1', 'id-2'] chứ không phải
    [{'id-1'},{id:'id-2'}]
   Nếu không đúng thì vẫn kéo thả được nhưng không có animation */}
   return (
