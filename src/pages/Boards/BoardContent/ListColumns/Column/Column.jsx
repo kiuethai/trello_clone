@@ -17,8 +17,6 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import { Button } from '@mui/material'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCard from './ListCards/ListCard'
-import { mapOrder } from '~/utils/sorts'
-
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
@@ -44,7 +42,8 @@ function Column({ column, createNewCard }) {
   const open = Boolean(anchorEl)
   const handleClick = (event) => { setAnchorEl(event.currentTarget) }
   const handleClose = () => { setAnchorEl(null) }
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  // Column đã được sắp xếp ở component cha cao nhất
+  const orderedCards = column.cards
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)

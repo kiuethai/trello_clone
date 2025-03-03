@@ -15,8 +15,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  console.log('columns:', columns)
-  const addNewColumn = async () => {
+  const addNewColumn = () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
       return
@@ -27,7 +26,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
     }
     // Gọi API
 
-    await createNewColumn(newColumnData)
+    createNewColumn(newColumnData)
 
     // Đóng trạng thái thêm Column mới & Clewr Input
     toggleOpenNewColumnForm()

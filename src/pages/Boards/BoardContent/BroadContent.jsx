@@ -1,7 +1,6 @@
 
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-import { mapOrder } from '~/utils/sorts'
 import {
   DndContext,
   //PointerSensor,
@@ -31,7 +30,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
+function BroadContent({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn }) {
   // fix trường hợp click bị gọi event
   // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -52,7 +51,8 @@ function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
   const lastOverId = useRef(null)
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+    // Column đã được sắp xếp ở component cha cao nhất
+    setOrderedColumns(board.columns)
   }, [board])
 
   const findColumnByCardId = (cardId) => {
@@ -173,7 +173,7 @@ function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
       const activeColumn = findColumnByCardId(activeDraggingCardId)
       const overColumn = findColumnByCardId(overCardId)
       // console.log('activeDraggingCardId', activeDraggingCardId)
-      //= console.log('OverCardId', overCardId)
+      // console.log('OverCardId', overCardId)
 
       if (!activeColumn || !overColumn) return
 
@@ -181,29 +181,45 @@ function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
       // console.log('oldColumnWhenDraggingCard', oldColumnWhenDraggingCard)
       // console.log('overColumn', overColumn)
 
+      // Hành động kéo thả card giữa 2 column khác nhau
       if (oldColumnWhenDraggingCard._id !== overColumn._id) {
         moveCardBetweenDifferentColumns(
-          overColumn, overCardId, active, activeColumn, over, activeDraggingCardId, activeDraggingCardData
+          overColumn,
+          overCardId,
+          active,
+          activeColumn,
+          over,
+          activeDraggingCardId,
+          activeDraggingCardData
         )
       } else {
+        // Hành động kéo thả card trong cùng một cái column
+
         // Lấy vị trí cũ (từ thằng oldColumnWhenDraggingCard)
         const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex(c => c._id === activeDragItemId)
+        console.log(' oldCardIndex', oldCardIndex)
         // Lấy vị trí mới ( từ thằng overColumn)
         const newCardIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
+        console.log(' newCardIndex', newCardIndex)
 
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+        const dndOrderedCardIds = dndOrderedCards.map(card => card._id)
+
+        // Vẫn gọi update State ở đây để tránh
         setOrderedColumns(prevColumns => {
           const nextColumns = cloneDeep(prevColumns)
 
           // Tìm tới cái Column mà chúng ta đang thả
           const targetColumn = nextColumns.find(c => c._id === overColumn._id)
+
           targetColumn.cards = dndOrderedCards
-          targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
+          targetColumn.cardOrderIds = dndOrderedCardIds
 
           // trả về giá trị state mới (chuẩn bị trí)
           return nextColumns
         })
 
+        moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard._id)
       }
     }
 
@@ -218,10 +234,10 @@ function BroadContent({ board, createNewColumn, createNewCard, moveColumns }) {
         const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
 
-        moveColumns(dndOrderedColumns)
-
         // Vẫn gọi update State ở đây để tránh delay hoặc Flickering giao diện lúc kéo thả cần phải chờ gọi API
         setOrderedColumns(dndOrderedColumns)
+
+        moveColumns(dndOrderedColumns)
       }
     }
 
