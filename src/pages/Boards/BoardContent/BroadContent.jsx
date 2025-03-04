@@ -36,7 +36,8 @@ function BroadContent({
   createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn }) {
+  moveCardToDifferentColumn,
+  deleteColumDetails }) {
   // fix trường hợp click bị gọi event
   // nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần trử kéo thả- nhưng mà còn bug
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -122,7 +123,7 @@ function BroadContent({
       }
       // Nếu function này được gọi từ handleDragEnd nghĩa là đã kéo thả xong, lúc này mới xử lý gọi API gọi 1 lần ở đây
       if (triggerform === 'handleDragEnd') {
-          // Phải dùng tới activeDragItemData.columnId hoặc tốt nhát là oldColumnWhenDraggingCard._id (set vào state từ bước handleDragStart) chứ không phải active trong scope handleDragEnd này vì sau khi đi qua onDragOver và tới đây là state của card đã bị cập nhật một lần rồi
+        // Phải dùng tới activeDragItemData.columnId hoặc tốt nhát là oldColumnWhenDraggingCard._id (set vào state từ bước handleDragStart) chứ không phải active trong scope handleDragEnd này vì sau khi đi qua onDragOver và tới đây là state của card đã bị cập nhật một lần rồi
         moveCardToDifferentColumn(
           activeDraggingCardId,
           oldColumnWhenDraggingCard._id,
@@ -344,7 +345,7 @@ function BroadContent({
           columns={orderedColumns}
           createNewColumn={createNewColumn}
           createNewCard={createNewCard}
-
+          deleteColumDetails={deleteColumDetails}
         />
         <DragOverlay dropAnimation={customDropAnimation}>
           {(!activeDragItemType) && null}
