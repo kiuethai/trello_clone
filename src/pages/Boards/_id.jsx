@@ -71,13 +71,20 @@ function Broad() {
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (columnToUpdate) {
-      columnToUpdate.cards.push(createdCard)
-      columnToUpdate.cardOrderIds.push(createdCard._id)
+      if (columnToUpdate) {
+
+        if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+          columnToUpdate.cards = [createdCard]
+          columnToUpdate.cardOrderIds.push(createdCard._id)
+        } else {
+          columnToUpdate.cards.push(createdCard)
+          columnToUpdate.cardOrderIds.push(createdCard._id)
+        }
+      }
+      setBoard(newBoard)
+
     }
-    setBoard(newBoard)
-
   }
-
   // Fun này có nhiệm vụ gọi API và xử lý khi kéo thả Column xog xuôi
   const moveColumns = (dndOrderedColumns) => {
     // Update cho chuẩn dữ liệu state board
@@ -115,10 +122,14 @@ function Broad() {
     setBoard(newBoard)
 
     // Gọi API xử lý phía BE
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    // Xử lý vấn đề khi kéo phần tử cuối cùng ra khỏi column, Column rỗng sẽ có placeholeder card cần xóa nó đi trước khi gửi dữ liệu lên cho phía BE
+    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = []
+
     moveCardToDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
     })
