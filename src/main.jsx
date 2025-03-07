@@ -7,22 +7,26 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/s
 import theme from '~/theme'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
 // Cấu hình MUI Dialog
 import { ConfirmProvider } from 'material-ui-confirm'
-
 // Cấu hình Redux Store
 import { Provider } from 'react-redux'
 import { store } from '~/redux/store'
 
+// Cấu hình react-router-dom với BrowserRouter
+import { BrowserRouter } from 'react-router-dom'
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <CssVarsProvider theme={theme}>
-      <ConfirmProvider>
-        <CssBaseline />
-        <App />
-        <ToastContainer position="bottom-left" theme="colored" />
-      </ConfirmProvider>
-    </CssVarsProvider>
-  </Provider>
+  <BrowserRouter basename='/'>
+    <Provider store={store}>
+      <CssVarsProvider theme={theme}>
+        <ConfirmProvider>
+          <CssBaseline />
+          <App />
+          <ToastContainer position="bottom-left" theme="colored" />
+        </ConfirmProvider>
+      </CssVarsProvider>
+    </Provider>
+  </BrowserRouter>
 )

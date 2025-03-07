@@ -7,8 +7,7 @@ import BroadContent from './BoardContent/BroadContent'
 import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI,
-  deleteColumDetailsAPI
+  moveCardToDifferentColumnAPI
 } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { Box, CircularProgress, Typography } from '@mui/material'
@@ -18,6 +17,7 @@ import {
   selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 function Broad() {
   const dispatch = useDispatch(null)
@@ -25,12 +25,13 @@ function Broad() {
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
 
+  const { boardId } = useParams()
+
   useEffect(() => {
-    const boardId = '67bc367cd6b0ce5558773a41'
     // call api
     dispatch(fetchBoardDetailsAPI(boardId))
 
-  }, [dispatch])
+  }, [dispatch, boardId])
 
 
   // Fun này có nhiệm vụ gọi API và xử lý khi kéo thả Column xog xuôi
