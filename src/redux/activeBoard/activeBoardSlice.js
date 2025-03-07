@@ -6,7 +6,6 @@ import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
 
 
-
 // Khởi tạo giá trị State của một cái Sloce trong redux
 const initialState = {
   currentActiveBoard: null
@@ -45,7 +44,7 @@ export const activeBoardSlice = createSlice({
       let board = action.payload
 
       // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con
-      board.column = mapOrder(board?.columns, board?.columnOrderIds, '_id')
+      board.columns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
       // Cần xử lý vấn đề kéo thả vào một column rỗng
       board.columns.forEach(column => {
         if (isEmpty(column.cards)) {
@@ -69,7 +68,7 @@ export const activeBoardSlice = createSlice({
 export const { updateCurrentActiveBoard } = activeBoardSlice.actions
 
 // Selectors:
-export const selecCurrentActiveBoard = (state) => {
+export const selectCurrentActiveBoard = (state) => {
   return state.activeBoard.currentActiveBoard
 }
 

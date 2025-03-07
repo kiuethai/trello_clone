@@ -23,8 +23,19 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
-
-function Column({ column, createNewCard, deleteColumDetails }) {
+import {
+  createNewCardAPI,
+  deleteColumDetailsAPI
+} from '~/apis'
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { cloneDeep } from 'lodash'
+function Column({ column }) {
+  const dispatch = useDispatch(null)
+  const board = useSelector(selectCurrentActiveBoard)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
@@ -63,7 +74,30 @@ function Column({ column, createNewCard, deleteColumDetails }) {
       columnId: column._id
     }
 
-    await createNewCard(newCardData)
+    //  gọi API tạo mới Column và làm lại dữ liệu State Board
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+
+    // Cập nhật state board
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (columnToUpdate) {
+      if (columnToUpdate) {
+
+        if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+          columnToUpdate.cards = [createdCard]
+          columnToUpdate.cardOrderIds.push(createdCard._id)
+        } else {
+          columnToUpdate.cards.push(createdCard)
+          columnToUpdate.cardOrderIds.push(createdCard._id)
+        }
+      }
+      dispatch(updateCurrentActiveBoard(newBoard))
+
+    }
+
     // Đóng trạng thái thêm Card mới & Clewr Input
     toggleOpenNewCardForm()
     setNewCardTitle('')
@@ -77,7 +111,20 @@ function Column({ column, createNewCard, deleteColumDetails }) {
       confirmationText: 'Confirm',
       cancellationText: 'Cancel'
 
-    }).then(() => { deleteColumDetails(column._id) }).catch(() => { })
+    }).then(() => {
+
+      // Update cho chuẩn dữ liệu state Board
+      const newBoard = { ...board }
+      newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+      dispatch(updateCurrentActiveBoard(newBoard))
+      // Gọi API xử lý phía BE
+      deleteColumDetailsAPI(column._id).then(res => {
+
+        toast.success(res?.deleteResult)
+      })
+
+    }).catch(() => { })
 
   }
 
