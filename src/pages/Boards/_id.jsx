@@ -10,7 +10,6 @@ import {
   moveCardToDifferentColumnAPI
 } from '~/apis'
 import { cloneDeep } from 'lodash'
-import { Box, CircularProgress, Typography } from '@mui/material'
 import {
   fetchBoardDetailsAPI,
   updateCurrentActiveBoard,
@@ -18,6 +17,7 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
 function Broad() {
   const dispatch = useDispatch(null)
@@ -87,19 +87,7 @@ function Broad() {
 
 
   if (!board) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 2,
-        width: '100vw',
-        height: '100vh'
-      }}>
-        <CircularProgress />
-        <Typography>Loading...</Typography>
-      </Box>
-    )
+    return <PageLoadingSpinner caption=" Loading..." />
   }
 
   return (
