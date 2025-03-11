@@ -1,10 +1,27 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 
 import Broad from '~/pages/Boards/_id'
 import NotFound from './pages/404/NotFound'
 import Auth from '~/pages/Auth/Auth'
 import AccountVerification from '~/pages/Auth/AccountVerification'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+
+
+/**
+ * Giải pháp Clean Code trong việc xác định các route nào cần đăng nhập tài khoản xong thì mới cho truy cập
+ * Sử dụng <Outlet /> của react-router-dom để hiển thị các Child Route
+ */
+const ProtectedRoute = ({ user }) => {
+  if (!user) return <Navigate to='/login' replace={true} />
+  return <Outlet />
+}
+
+
 function App() {
+  const currentUser = useSelector(selectCurrentUser)
+
   return (
     <Routes>
       {/* Redirect Route*/}
@@ -12,9 +29,14 @@ function App() {
         < Navigate to="/boards/67bc367cd6b0ce5558773a41" replace={true} />
       } />
 
-      {/* Broad Details */}
-      <Route path='/boards/:boardId' element={<Broad />} />
+      {/* ProtectedRoute Routes */}
+      < Route element={<ProtectedRoute user={currentUser} />}>
+        {/* <Outlet /> của react-router-dom sẽ chạy vào các child route trong này */}
 
+
+        {/* Broad Details */}
+        <Route path='/boards/:boardId' element={<Broad />} />
+      </Route>
       {/* Authentication */}
       <Route path='/login' element={<Auth />} />
       <Route path='/register' element={<Auth />} />
