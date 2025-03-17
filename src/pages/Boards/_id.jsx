@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
-function Broad() {
+function Board() {
   const dispatch = useDispatch(null)
   // Không dùng State của component nữa mà chuyển qua dùng State của Redux
   // const [board, setBoard] = useState(null)
@@ -106,4 +106,4 @@ function Broad() {
     </Container>
   )
 }
-export default Broad
+export default Board
