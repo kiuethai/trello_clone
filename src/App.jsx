@@ -28,7 +28,7 @@ function App() {
     <Routes>
       {/* Redirect Route*/}
       <Route path='/' element={
-        < Navigate to="/boards/67bc367cd6b0ce5558773a41" replace={true} />
+        < Navigate to="/boards" replace={true} />
       } />
 
       {/* ProtectedRoute Routes */}
