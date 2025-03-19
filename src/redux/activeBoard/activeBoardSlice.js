@@ -34,7 +34,23 @@ export const activeBoardSlice = createSlice({
 
       // Update lại dữ liệu của cái currentActiveBoard
       state.currentActiveBoard = board
+    },
+    updateCardInBoard: (state, action) => {
+      // Updated nested data
+      const incomingCard = action.payload
 
+      // Tìm dần từ board > column > card
+      const column = state.currentActiveBoard.columns.find(i => i._id === incomingCard.columnId)
+      if (column) {
+        const card = column.cards.find(i => i._id === incomingCard._id)
+        if (card) {
+          // card.title = incomingCard.title
+
+          Object.keys(incomingCard).forEach(key => {
+            card[key] = incomingCard[key]
+          })
+        }
+      }
     }
   },
   // ExtraReducer: Nơi xử lý dữ liệu bất đồng bộ
@@ -65,7 +81,7 @@ export const activeBoardSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard, updateCardInBoard } = activeBoardSlice.actions
 
 // Selectors:
 export const selectCurrentActiveBoard = (state) => {

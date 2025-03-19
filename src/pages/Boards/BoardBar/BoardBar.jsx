@@ -12,7 +12,7 @@ import { Tooltip } from '@mui/material'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
-
+import BoardUserGroup from './BoardUserGroup'
 const MENU_STYLES = {
   color: 'white',
   backgroundColor: 'transparent',
@@ -87,56 +87,9 @@ function BoardBar({ board }) {
             '&:hover': { borderColor: 'white' }
           }}
         >Invite</Button>
+        {/* Xử lý hiển thị danh sách thành viên của board */}
+        <BoardUserGroup />
 
-        <AvatarGroup
-          max={4}
-          sx={{
-            gap: '10px',
-            '& .MuiAvatar-root': {
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              '&:first-of-type': { bgcolor: '#a4b0be' }
-            }
-          }}
-        >
-          <Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip><Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip><Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip><Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip><Tooltip title="Thai">
-            <Avatar
-              alt="Thai"
-              src="https://i.pinimg.com/originals/f4/5a/9d/f45a9d3ebe62ea0457ddffea4cc60a04.jpg"
-            />
-          </Tooltip>
-
-        </AvatarGroup>
       </Box>
     </Box>
   )
