@@ -80,12 +80,12 @@ function ActiveCard() {
   // func gọi API dùng chung cho các trường hợp update card title, desription, cover, commit
   const callApiUpdateCard = async (updateData) => {
     const updatedCard = await updateCardDetailsAPI(activeCard._id, updateData)
-
     // Cập nhật lại cái card đang active trong modal hiện tại
     dispatch(updateCurrentActiveCard(updatedCard))
 
     // Cập nhật lại cái bản ghi card trong cái activeBoard(nested data)
     dispatch(updateCardInBoard(updatedCard))
+    // console.log('🚀 ~ callApiUpdateCard ~ updatedCard:', updatedCard)
 
     return updatedCard
   }
@@ -94,6 +94,9 @@ function ActiveCard() {
     callApiUpdateCard({ title: newTitle.trim() })
   }
 
+  const onUpdateCardDescription = (newDescription) => {
+    callApiUpdateCard({ description: newDescription })
+  }
   const onUploadCardCover = (event) => {
     // console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
@@ -103,8 +106,14 @@ function ActiveCard() {
     }
     let reqData = new FormData()
     reqData.append('cardCover', event.target?.files[0])
+    // console.log('🚀 ~ onUploadCardCover ~ file:', event.target?.files[0])
+
 
     // Gọi API...
+    toast.promise(
+      callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+      { pending: 'Updating .....' }
+    )
   }
 
   return (
@@ -134,6 +143,7 @@ function ActiveCard() {
         }}>
           <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} onClick={handleCloseModal} />
         </Box>
+
         {activeCard?.cover &&
           <Box sx={{ mb: 4 }}>
             <img
@@ -141,7 +151,8 @@ function ActiveCard() {
               src={activeCard?.cover}
               alt="card-cover"
             />
-          </Box>}
+          </Box>
+        }
 
 
         <Box sx={{ mb: 1, mt: -3, pr: 2.5, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -171,7 +182,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor />
+              <CardDescriptionMdEditor
+                cardDescriptionProp={activeCard?.description}
+                handleUpdateCardDescription={onUpdateCardDescription}
+              />
             </Box>
 
             <Box sx={{ mb: 3 }}>
