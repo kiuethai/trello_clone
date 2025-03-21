@@ -11,7 +11,7 @@ import { EMAIL_RULE, FIELD_REQUIRED_MESSAGE, EMAIL_RULE_MESSAGE } from '~/utils/
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { inviteUserToBoarAPI } from '~/apis'
 
-function InviteBoardUser(boardId) {
+function InviteBoardUser({ boardId }) {
   /**
    * Xử lý Popover để ẩn hoặc hiện một popup nhỏ:
    * https://mui.com/material-ui/react-popover/
