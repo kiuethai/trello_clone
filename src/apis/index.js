@@ -1,4 +1,4 @@
-import authorizedAxiosInstance from '~/utils/authorizeaAxios'
+import authorizedAxiosInstance from '~/utils/authorizeAxios'
 import { API_ROOT } from '~/utils/constants'
 import { toast } from 'react-toastify'
 
