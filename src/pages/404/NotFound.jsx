@@ -25,7 +25,7 @@ function NotFound() {
         animation: 'stars 12s linear infinite alternate',
         width: '100%',
         height: '100%',
-        backgroundImage: 'url("src/assets/404/particles.png")',
+        backgroundImage: 'url("https://res.cloudinary.com/dbkhjufja/image/upload/v1742960251/xajjtftbqxhvejdkvbjh.png")',
         backgroundSize: 'contain',
         backgroundRepeat: 'repeat',
         backgroundPosition: 'center',
