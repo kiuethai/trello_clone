@@ -21,9 +21,18 @@ import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { registerUserAPI } from '~/apis'
 import { toast } from 'react-toastify'
 
+import { useState } from 'react'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
 function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
   const navigate = useNavigate()
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
   const submitRegister = (data) => {
     const { email, password } = data
@@ -34,6 +43,13 @@ function RegisterForm() {
       navigate(`/login?registeredEmail=${user.email}`)
     })
   }
+
+  // Handlers cho password
+  const handleClickShowPassword = () => setShowPassword(!showPassword)
+  const handleMouseDownPassword = (event) => event.preventDefault()
+  // Handlers cho password confirmation
+  const handleClickShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm)
+  const handleMouseDownPasswordConfirm = (event) => event.preventDefault()
 
   return (
     <form onSubmit={handleSubmit(submitRegister)}>
@@ -54,7 +70,6 @@ function RegisterForm() {
           <Box sx={{ padding: '0 1em 1em 1em' }}>
             <Box sx={{ marginTop: '1em' }}>
               <TextField
-                // autoComplete="nope"
                 autoFocus
                 fullWidth
                 label="Enter Email..."
@@ -76,7 +91,7 @@ function RegisterForm() {
               <TextField
                 fullWidth
                 label="Enter Password..."
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 variant="outlined"
                 error={!!errors['password']}
                 {...register('password', {
@@ -86,6 +101,20 @@ function RegisterForm() {
                     message: PASSWORD_RULE_MESSAGE
                   }
                 })}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
               <FieldErrorAlert errors={errors} fieldName={'password'} />
             </Box>
@@ -94,7 +123,7 @@ function RegisterForm() {
               <TextField
                 fullWidth
                 label="Enter Password Confirmation..."
-                type="password"
+                type={showPasswordConfirm ? 'text' : 'password'}
                 variant="outlined"
                 error={!!errors['password_confirmation']}
                 {...register('password_confirmation', {
@@ -103,9 +132,22 @@ function RegisterForm() {
                     return 'Password confirmation incorrect!'
                   }
                 })}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password confirmation visibility"
+                        onClick={handleClickShowPasswordConfirm}
+                        onMouseDown={handleMouseDownPasswordConfirm}
+                        edge="end"
+                      >
+                        {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
               <FieldErrorAlert errors={errors} fieldName={'password_confirmation'} />
-
             </Box>
           </Box>
           <CardActions sx={{ padding: '0 1em 1em 1em' }}>
