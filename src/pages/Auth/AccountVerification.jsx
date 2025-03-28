@@ -9,7 +9,6 @@ function AccountVerification() {
   // const email = searchParams.get('email')
   // const token = searchParams.get('token')
   const { email, token } = Object.fromEntries([...searchParams])
-  console.log('Email:', email, 'Token:', token)
   // Tạo một biến state để biết được là đã verify tài khoản thành công hay chưa
   const [verified, setVerified] = useState(false)
 

@@ -8,6 +8,7 @@ function PageLoadingSpinner({ caption }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      background: 'url("https://res.cloudinary.com/dbkhjufja/image/upload/v1743161748/lz8nnz7f2upqtyaowubr.jpg")',
       gap: 2,
       width: '100vw',
       height: '100vh'
