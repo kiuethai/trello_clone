@@ -24,7 +24,7 @@ function AccountVerification() {
     return <Navigate to="/404" />
   }
   // Nếu chưa verify xong thì hiện loading
-  if (!verified) {AccountVerification
+  if (!verified) {
     return <PageLoadingSpinner caption="Verifying your account" />
   }
 
