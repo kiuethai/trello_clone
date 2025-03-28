@@ -41,6 +41,9 @@ function RegisterForm() {
       { pending: 'Registration is in progress...' }
     ).then(user => {
       navigate(`/login?registeredEmail=${user.email}`)
+    }).catch(error => {
+      console.error('Registration error:', error);
+      // Có thể hiển thị thêm thông báo chi tiết
     })
   }
 
