@@ -5,8 +5,8 @@
 ### [Demo](https://trello-clone-phi-wheat.vercel.app/) 
 ---
 
-- [Overview](#overview)
-- [Key Features](#key-features)
+- [Overview](#Overview)
+- [Key Features](#Key-Features)
 - [User Authentication](#user-authentication)
 - [Technologies Used](#technologies-used)
   - [1. **Frontend**](#Frontend)
